@@ -1,6 +1,6 @@
-# vbscore
+# timer
 
-This is a little Volleyball scorer as a website.
+This is a little volleyball training stop watch as a website.
 
 Seems to work. Not heavily testet. Documentation will follow.
 
