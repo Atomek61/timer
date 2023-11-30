@@ -6,7 +6,7 @@
    viewBox="0 0 33.867 33.867"
    id="svg2"
    sodipodi:docname="stop.svg"
-   inkscape:version="1.3 (0e150ed6c4, 2023-07-21)"
+   inkscape:version="1.2.2 (732a01da63, 2022-12-09)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -24,13 +24,13 @@
      inkscape:deskcolor="#d1d1d1"
      showgrid="true"
      inkscape:zoom="2.3847656"
-     inkscape:cx="50.109746"
-     inkscape:cy="145.71663"
-     inkscape:window-width="2560"
-     inkscape:window-height="1417"
-     inkscape:window-x="-8"
-     inkscape:window-y="-8"
-     inkscape:window-maximized="1"
+     inkscape:cx="50.319411"
+     inkscape:cy="145.92629"
+     inkscape:window-width="2544"
+     inkscape:window-height="1401"
+     inkscape:window-x="312"
+     inkscape:window-y="171"
+     inkscape:window-maximized="0"
      inkscape:current-layer="svg2">
     <inkscape:grid
        id="grid2"
@@ -50,11 +50,11 @@
        visible="true" />
   </sodipodi:namedview>
   <rect
-     style="fill:#2e63a2;stroke-width:1.05834;stroke-linejoin:round;paint-order:markers fill stroke"
+     style="fill:#2e63a2;stroke-width:0.881947;stroke-linejoin:round;paint-order:markers fill stroke"
      id="rect2"
-     width="25.400249"
-     height="25.400249"
-     x="4.2333751"
-     y="4.2333751"
-     ry="3.1750314" />
+     width="21.166876"
+     height="21.166876"
+     x="6.3500624"
+     y="6.3500624"
+     ry="2.1166878" />
 </svg>

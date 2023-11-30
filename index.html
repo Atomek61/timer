@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <title></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="timer.js"></script>
     <script src="modules.js"></script>
     <script src="modulebar.js"></script>
     <style>   
@@ -15,11 +16,11 @@
             font: 11pt "Arial";
         }
 
-        @media  (min-aspect-ratio: 100/49) {
+        @media  (min-aspect-ratio: 20/8) {
             #timer {height: 100%;}
         }
 
-        @media  (max-aspect-ratio: 100/49) {
+        @media  (max-aspect-ratio: 20/8) {
             #timer {width: 100%;}
         }
 
@@ -29,11 +30,11 @@
             left: 50%;
             top: 50%;
             transform: translateX(-50%) translateY(-50%);
-            aspect-ratio: 23/8;
+            aspect-ratio: 20/8;
         }
 
         #display {
-            height: 80%;
+            height: 70%;
             /* background-color: #002222; */
         }
 
@@ -55,7 +56,7 @@
         }
 
         .controls {
-            height: 20%;
+            height: 30%;
             /* background-color: #002200; */
             display: flex;
             justify-content: space-around;
@@ -74,7 +75,6 @@
         }
 
         .button {
-            color: red;
             height: 80%;
             aspect-ratio: 3/2;
             background-size: contain;
@@ -102,66 +102,12 @@
             background-image: url("img/start.svg");
         }
 
-        .pause {
-            background-image: url("img/pause.svg");
-        }
-
         .stop {
-            background-image: url("img/stop.svg");
-        }
-
-        .continue {
-            background-image: url("img/continue.svg");
+            background-image: url("img/stop.svg"); visibility: hidden;
         }
 
     </style>
     <script>
-
-        const Mode = {
-            Ready: "Ready",
-            Running: "Running",
-            Stopped: "Stopped",
-            Paused: "Paused"                
-        }
-
-        class Timer {
-
-            constructor(container) {
-                this.container = container;
-                this._mode = Mode.Ready;
-            }
-
-            get mode() {
-                return this._mode;
-            }
-
-            set mode(value) {
-                if (value!=this.mode) {
-                    this._mode = value;
-                    this.doModeChanged();
-                }
-            }
-
-            start() {
-                this.t0 = Date.UTC();
-                this.mode = Mode.Running;
-            }
-
-            stop() {                
-                this.t1 = Date.UTC();
-                this.mode = Mode.Stopped;
-            }
-
-            pause() {
-                this.t1 = Date.UTC();
-                this.mode = Mode.Paused;
-            }
-
-            continue() {
-                this.mode = Mode.Running;
-            }
-        }
-
 
         const timeFormat = new Intl.DateTimeFormat('en-us', {
             hour: "2-digit",
@@ -183,7 +129,26 @@
             clockdisplay.display(HHoMM+o+SS);
         }        
 
+        function select(classname) {
+            return document.querySelector("#timer ." + classname);
+        }
+
+        function div(dividend, divisor) {
+            let quotient = dividend / divisor;
+            return Math.floor(quotient);
+        }
+
+        function secondsToString(value) {
+            value = value % 3600.0;
+            let MM = new Intl.NumberFormat('en-US', {minimumIntegerDigits: 2}).format(div(value, 60.0));
+            let SSoSSS = new Intl.NumberFormat('en-US', {minimumIntegerDigits: 2, maximumFractionDigits: 3, minimumFractionDigits: 3}).format(value % 60.0);
+            return MM+":"+SSoSSS;
+        }
+
         window.onload = ()=>{
+        
+            console.log(secondsToString(125.12));
+
             modulebar = new ModuleBar(document.getElementById("display"), "88:88.8");
             modulebar.display("00:00.0")
 
@@ -191,6 +156,54 @@
             clockdisplay.colors = ["#068", "#001"];
             updateClock();
             setInterval(()=>{this.updateClock()}, 150);
+
+            timer = new Timer();
+            buttonStart = select("start");
+            buttonStop = select("stop");
+
+            buttonStart.onclick = (e) => {
+                switch(timer.mode) {
+                    case Mode.Ready:
+                        timer.start();
+                        setInterval(()=>{
+                            modulebar.display(secondsToString(timer.elapsed));
+                        }, 100);
+                        break;
+                    case Mode.Running:
+                        timer.pause();
+                        break;
+                    case Mode.Paused:
+                        timer.continue();
+                        break;
+                }
+            };
+
+            buttonStop.onclick = (e) => {
+                switch(timer.mode) {
+                    case Mode.Paused:
+                        timer.stop();
+                        break;
+                        
+                }
+            };
+
+            timer.onmodechanged = (e) => {
+                switch(e.target.mode) {
+                    case Mode.Ready:
+                        buttonStart.style.backgroundImage = "url(img/start.svg)";
+                        buttonStop.style.visibility = "hidden";
+                        break;
+                    case Mode.Running:
+                        buttonStart.style.backgroundImage = "url(img/pause.svg)";
+                        buttonStop.style.visibility = "hidden";
+                        break;
+                    case Mode.Paused:
+                        buttonStart.style.backgroundImage = "url(img/continue.svg)";
+                        buttonStop.style.visibility = "visible";
+                        break;
+                }    
+            }
+
         }
     </script>
 </head>
@@ -201,9 +214,7 @@
             <div id="clock"></div>
             <div class="button full"></div>
             <div class="button start"></div>
-            <div class="button pause"></div>
             <div class="button stop"></div>
-            <div class="button continue"></div>
         </div>
     </div>
     <span id="appnote" >© 2023 Jan-Erich Schirrmacher, www.atomek.de</span>
