@@ -2,216 +2,24 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <title></title>
+    <title>Training Timer</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="timer.js"></script>
+    <link rel="stylesheet" href="timer.css"/>
     <script src="modules.js"></script>
     <script src="modulebar.js"></script>
-    <style>   
-
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: black;
-            font: 11pt "Arial";
-        }
-
-        @media  (min-aspect-ratio: 20/8) {
-            #timer {height: 100%;}
-        }
-
-        @media  (max-aspect-ratio: 20/8) {
-            #timer {width: 100%;}
-        }
-
-        #timer {
-            /* background-color: #222222; */
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translateX(-50%) translateY(-50%);
-            aspect-ratio: 20/8;
-        }
-
-        #display {
-            height: 70%;
-            /* background-color: #002222; */
-        }
-
-        #display svg {
-            position: relative;
-            height: 100%;
-        }
-
-        #clock {
-            position: relative;
-            top: 5%;
-            height: 80%;
-            aspect-ratio: 16/4;
-        }
-
-        #clock svg {
-           position: relative;
-           height: 90%;
-        }
-
-        .controls {
-            height: 30%;
-            /* background-color: #002200; */
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-        }
-
-        #appnote {
-          writing-mode: vertical-rl;
-          position: absolute; right: 8px; top: 4px;
-          color: hsla(20, 40%, 80%, 30%);
-        }
-
-        #versionnote {
-          position: absolute; left: 8px; bottom: 4px;
-          color: hsla(20, 40%, 80%, 30%);
-        }
-
-        .button {
-            height: 80%;
-            aspect-ratio: 3/2;
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-            border-radius: 10%;
-            background-color: #002233;
-        }
-        
-        .button:hover {
-            transition: 0.6s ease;
-            background-color:  #00334d;
-        }
-
-        .button:active {
-            transition: 0.2s ease;
-            background-color: #004466;
-        }
-
-        .full {
-            background-image: url("img/full1.svg");
-        }
-
-        .start {
-            background-image: url("img/start.svg");
-        }
-
-        .stop {
-            background-image: url("img/stop.svg"); visibility: hidden;
-        }
-
-    </style>
+    <script src="timer.js"></script>
+    <script src="timerctrl.js"></script>
     <script>
-
-        const timeFormat = new Intl.DateTimeFormat('en-us', {
-            hour: "2-digit",
-            minute:"2-digit",
-            second:"2-digit",
-            hour12: false,
-        });
-
-        function getTimeStr(time) {
-            return timeFormat.format(time)
-        }
-
-        function updateClock() {
-            let time = Date.now()
-            let HHoMMoSS = getTimeStr(time);
-            let HHoMM = HHoMMoSS.slice(0, 5);
-            let o = (time % 1000) > 500 ? " " : ":";
-            let SS = HHoMMoSS.slice(-2)
-            clockdisplay.display(HHoMM+o+SS);
-        }        
-
-        function select(classname) {
-            return document.querySelector("#timer ." + classname);
-        }
-
-        function div(dividend, divisor) {
-            let quotient = dividend / divisor;
-            return Math.floor(quotient);
-        }
-
-        function secondsToString(value) {
-            value = value % 3600.0;
-            let MM = new Intl.NumberFormat('en-US', {minimumIntegerDigits: 2}).format(div(value, 60.0));
-            let SSoSSS = new Intl.NumberFormat('en-US', {minimumIntegerDigits: 2, maximumFractionDigits: 3, minimumFractionDigits: 3}).format(value % 60.0);
-            return MM+":"+SSoSSS;
-        }
-
         window.onload = ()=>{
-        
-            console.log(secondsToString(125.12));
-
-            modulebar = new ModuleBar(document.getElementById("display"), "88:88.8");
-            modulebar.display("00:00.0")
-
-            clockdisplay = new ModuleBar(document.getElementById("clock"), "88:88:88", "fat");
-            clockdisplay.colors = ["#068", "#001"];
-            updateClock();
-            setInterval(()=>{this.updateClock()}, 150);
-
-            timer = new Timer();
-            buttonStart = select("start");
-            buttonStop = select("stop");
-
-            buttonStart.onclick = (e) => {
-                switch(timer.mode) {
-                    case Mode.Ready:
-                        timer.start();
-                        setInterval(()=>{
-                            modulebar.display(secondsToString(timer.elapsed));
-                        }, 100);
-                        break;
-                    case Mode.Running:
-                        timer.pause();
-                        break;
-                    case Mode.Paused:
-                        timer.continue();
-                        break;
-                }
-            };
-
-            buttonStop.onclick = (e) => {
-                switch(timer.mode) {
-                    case Mode.Paused:
-                        timer.stop();
-                        break;
-                        
-                }
-            };
-
-            timer.onmodechanged = (e) => {
-                switch(e.target.mode) {
-                    case Mode.Ready:
-                        buttonStart.style.backgroundImage = "url(img/start.svg)";
-                        buttonStop.style.visibility = "hidden";
-                        break;
-                    case Mode.Running:
-                        buttonStart.style.backgroundImage = "url(img/pause.svg)";
-                        buttonStop.style.visibility = "hidden";
-                        break;
-                    case Mode.Paused:
-                        buttonStart.style.backgroundImage = "url(img/continue.svg)";
-                        buttonStop.style.visibility = "visible";
-                        break;
-                }    
-            }
-
+            timerController = new TimerController(document.getElementById("timer"));
         }
     </script>
 </head>
 <body>
     <div id="timer">
-        <div id="display"></div>
+        <div class="display"></div>
         <div class="controls">
-            <div id="clock"></div>
+            <div class="clock"></div>
             <div class="button full"></div>
             <div class="button start"></div>
             <div class="button stop"></div>
