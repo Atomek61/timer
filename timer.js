@@ -65,8 +65,4 @@ class Timer {
             this.mode = Mode.Running;
     }
 
-    select(classname) {
-        return document.querySelector("#"+this.container.id + " ." + classname);
-    }
-
 }
